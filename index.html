@@ -117,32 +117,6 @@
             text-align: center;
         }
 
-        .main-button {
-            display: block;
-            width: 100%;
-            padding: 18px 24px;
-            background: linear-gradient(135deg, var(--accent), #00a8ff);
-            color: #000;
-            font-size: 18px;
-            font-weight: 700;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 24px var(--accent-glow);
-            text-decoration: none;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .main-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px var(--accent-glow);
-        }
-
-        .main-button:active {
-            transform: translateY(0px);
-        }
 
         /* Instructions Section */
         .instructions {
@@ -316,64 +290,8 @@
             50% { transform: translateY(-8px); }
         }
 
-        /* Direct Link */
-        .link-box {
-            background: rgba(0, 242, 234, 0.08);
-            border: 1px dashed var(--accent);
-            border-radius: 12px;
-            padding: 16px;
-            margin: 20px 0;
-            text-align: center;
-        }
 
-        .link-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
 
-        .direct-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 14px;
-            word-break: break-all;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .direct-link:hover {
-            color: #00ffed;
-            text-decoration: underline;
-        }
-
-        /* Badge */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 20px;
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 12px;
-            line-height: 1.6;
-        }
 
         .tiktok-badge {
             display: inline-block;
@@ -406,21 +324,7 @@
         <div class="card">
             <div class="logo">🔗</div>
             <h1>Open in Browser</h1>
-            <p class="subtitle">Click the button below to access your links</p>
-
-            <button class="main-button" id="mainButton" onclick="handleClick()">
-                🚀 Open CNMastair Links
-            </button>
-
-            <div class="link-box">
-                <div class="link-label">Direct Link - Hold & Click "Open in Browser"</div>
-                <a href="https://beacons.ai/cnmastairs"
-                   class="direct-link"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    https://beacons.ai/cnmastairs
-                </a>
-            </div>
+            <p class="subtitle">Follow the steps below to access your links</p>
 
             <div class="instructions" id="instructions">
                 <div class="tiktok-badge">📱 TikTok Detected</div>
@@ -459,15 +363,6 @@
                     <span class="step-icon">✨</span>
                 </div>
             </div>
-
-            <div class="badge">
-                <span>🔒</span>
-                <span>Secure Connection</span>
-            </div>
-
-            <div class="footer">
-                Having trouble? Copy the direct link above<br>and paste it in your browser.
-            </div>
         </div>
     </div>
 
@@ -488,46 +383,32 @@
                    ua.indexOf('JsSdk') > -1;
         }
 
-        // Handle button click
-        function handleClick() {
-            if (attempted) return;
-            attempted = true;
-
-            if (isTikTok()) {
-                // Show visual instructions
-                showInstructions();
-            } else {
-                // Direct redirect
-                window.location.href = TARGET_URL;
-            }
-        }
-
-        // Show TikTok instructions
-        function showInstructions() {
+        // Show TikTok instructions immediately on page load
+        function showTikTokInstructions() {
             const instructionsEl = document.getElementById('instructions');
-            const buttonEl = document.getElementById('mainButton');
             const pointerEl = document.getElementById('menuPointer');
 
+            // Show instructions
             instructionsEl.classList.add('active');
-            buttonEl.textContent = '↗️ Try Opening Link';
-            buttonEl.onclick = function() {
-                window.location.href = TARGET_URL;
-            };
 
             // Show menu pointer
             if (pointerEl) {
                 pointerEl.classList.add('active');
             }
 
-            // Scroll to instructions
+            // Scroll to instructions smoothly
             setTimeout(() => {
-                instructionsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                instructionsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 100);
         }
 
-        // Auto-redirect if NOT in TikTok
+        // Auto-detect and show instructions or redirect
         window.addEventListener('DOMContentLoaded', function() {
-            if (!isTikTok()) {
+            if (isTikTok()) {
+                // Show instructions immediately for TikTok users
+                showTikTokInstructions();
+            } else {
+                // Auto-redirect for non-TikTok users
                 setTimeout(function() {
                     window.location.href = TARGET_URL;
                 }, 500);
