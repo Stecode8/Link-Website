@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Opening Link...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-card: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent: #00f2ea;
+            --accent-hover: #00d4cc;
+            --border: #333333;
+            --error: #ff6b6b;
+            --success: #51cf66;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-primary: #ffffff;
+                --bg-secondary: #f5f5f5;
+                --bg-card: #ffffff;
+                --text-primary: #0a0a0a;
+                --text-secondary: #666666;
+                --border: #e0e0e0;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--accent), #ff0050);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(0, 242, 234, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            color: var(--accent);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 242, 234, 0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .instructions {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid var(--error);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        .instructions-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        .instructions strong {
+            color: var(--text-primary);
+        }
+
+        .button-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            color: #000;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 12px 0;
+            box-shadow: 0 4px 20px rgba(0, 242, 234, 0.3);
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 242, 234, 0.4);
+        }
+
+        .button-secondary {
+            display: inline-block;
+            background: transparent;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 12px 0;
+        }
+
+        .button-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(81, 207, 102, 0.2);
+            color: var(--success);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .footer {
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 24px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo">🔗</div>
+            <h1>Opening Your Link</h1>
+            <p class="subtitle">Redirecting you to your destination...</p>
+
+            <div class="status" id="status">
+                <div class="spinner"></div>
+                <span id="statusText">Attempting automatic redirect...</span>
+            </div>
+
+            <div class="instructions hidden" id="instructions">
+                <div class="instructions-title">
+                    <span>⚠️</span>
+                    <span>Manual Browser Opening Required</span>
+                </div>
+                <ol>
+                    <li>Tap the <strong>three dots (...)</strong> in the top-right corner</li>
+                    <li>Select <strong>"Open in Browser"</strong> or <strong>"Open in Safari/Chrome"</strong></li>
+                    <li>The link will open in your default browser</li>
+                </ol>
+            </div>
+
+            <a href="https://beacons.ai/cnmastairs"
+               class="button-primary"
+               id="manualLink"
+               target="_blank"
+               rel="noopener noreferrer">
+                Open Link Manually
+            </a>
+
+            <button class="button-secondary" id="retryButton" onclick="retryRedirect()">
+                Try Automatic Redirect Again
+            </button>
+
+            <div class="badge">✓ Secure Connection</div>
+
+            <div class="divider"></div>
+
+            <div class="footer">
+                If you're having trouble, please try opening this page<br>in your device's default browser.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TARGET_URL = 'https://beacons.ai/cnmastairs';
+        let redirectAttempted = false;
+
+        // Detect if we're in an in-app browser
+        function detectInAppBrowser() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+            // TikTok in-app browser detection
+            const isTikTok = /TikTok/i.test(ua) || /musical_ly/i.test(ua);
+
+            // Other in-app browsers
+            const isInstagram = /Instagram/i.test(ua);
+            const isFacebook = /FB|FBAV|FBAN/i.test(ua);
+            const isTwitter = /Twitter/i.test(ua);
+            const isLinkedIn = /LinkedInApp/i.test(ua);
+            const isMessenger = /Messenger/i.test(ua);
+
+            return {
+                isInApp: isTikTok || isInstagram || isFacebook || isTwitter || isLinkedIn || isMessenger,
+                platform: isTikTok ? 'TikTok' :
+                         isInstagram ? 'Instagram' :
+                         isFacebook ? 'Facebook' :
+                         isTwitter ? 'Twitter' :
+                         isLinkedIn ? 'LinkedIn' :
+                         isMessenger ? 'Messenger' : 'Unknown'
+            };
+        }
+
+        // iOS specific bypass using Shortcuts error callback
+        function iOSBypass(url) {
+            const randomUUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+
+            const shortcutsUrl = `shortcuts://x-callback-url/run-shortcut?name=${randomUUID}&x-error=${encodeURIComponent(url)}`;
+            window.location.href = shortcutsUrl;
+        }
+
+        // Android specific bypass using Intent
+        function androidBypass(url) {
+            const intentUrl = `intent:${url.replace(/^https?:\/\//, '')}#Intent;end`;
+            window.location.href = intentUrl;
+
+            // Fallback: Try Chrome-specific intent
+            setTimeout(() => {
+                const chromeIntent = `intent:${url.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
+                window.location.href = chromeIntent;
+            }, 500);
+        }
+
+        // Blob download trick to trigger external browser
+        function blobBypass(url) {
+            try {
+                const blob = new Blob([''], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '';
+                a.style.display = 'none';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(blobUrl);
+            } catch (e) {
+                console.log('Blob bypass failed:', e);
+            }
+        }
+
+        // Universal app scheme bypass
+        function universalAppSchemeBypass(url) {
+            // Try various browser-specific URL schemes
+            const schemes = [
+                `googlechrome://${url.replace(/^https?:\/\//, '')}`,
+                `firefox://open-url?url=${encodeURIComponent(url)}`,
+                `opera-http://${url.replace(/^https?:\/\//, '')}`,
+                `x-web-search://?${encodeURIComponent(url)}`
+            ];
+
+            schemes.forEach((scheme, index) => {
+                setTimeout(() => {
+                    window.location.href = scheme;
+                }, index * 300);
+            });
+        }
+
+        // Meta refresh fallback
+        function metaRefreshBypass(url) {
+            const meta = document.createElement('meta');
+            meta.httpEquiv = 'refresh';
+            meta.content = `0;url=${url}`;
+            document.head.appendChild(meta);
+        }
+
+        // Main redirect function with multiple strategies
+        function attemptRedirect() {
+            if (redirectAttempted) return;
+            redirectAttempted = true;
+
+            const detection = detectInAppBrowser();
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+
+            console.log('Device detection:', { isIOS, isAndroid, ...detection });
+
+            // Update status
+            document.getElementById('statusText').textContent =
+                detection.isInApp ?
+                `${detection.platform} detected - attempting bypass...` :
+                'Redirecting...';
+
+            // Strategy 1: iOS Shortcuts bypass (most effective for iOS in 2026)
+            if (isIOS) {
+                setTimeout(() => iOSBypass(TARGET_URL), 100);
+            }
+
+            // Strategy 2: Android Intent bypass
+            if (isAndroid) {
+                setTimeout(() => androidBypass(TARGET_URL), 100);
+            }
+
+            // Strategy 3: Blob/download trigger
+            setTimeout(() => blobBypass(TARGET_URL), 300);
+
+            // Strategy 4: Universal app scheme attempts
+            setTimeout(() => universalAppSchemeBypass(TARGET_URL), 600);
+
+            // Strategy 5: Direct window.open with specific features
+            setTimeout(() => {
+                const newWindow = window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
+                if (!newWindow) {
+                    console.log('Popup blocked');
+                }
+            }, 900);
+
+            // Strategy 6: Direct location replace
+            setTimeout(() => {
+                window.location.replace(TARGET_URL);
+            }, 1200);
+
+            // Strategy 7: Meta refresh fallback
+            setTimeout(() => {
+                metaRefreshBypass(TARGET_URL);
+            }, 1500);
+
+            // Strategy 8: Direct assignment fallback
+            setTimeout(() => {
+                window.location.href = TARGET_URL;
+            }, 1800);
+
+            // After 3 seconds, show manual instructions if still here
+            setTimeout(() => {
+                if (detection.isInApp) {
+                    document.getElementById('status').style.display = 'none';
+                    document.getElementById('instructions').classList.remove('hidden');
+                    document.getElementById('statusText').textContent = 'Please open manually';
+                }
+            }, 3000);
+        }
+
+        // Retry function
+        function retryRedirect() {
+            redirectAttempted = false;
+            document.getElementById('status').style.display = 'flex';
+            document.getElementById('instructions').classList.add('hidden');
+            document.getElementById('statusText').textContent = 'Retrying automatic redirect...';
+            attemptRedirect();
+        }
+
+        // Start redirect attempts immediately on page load
+        window.addEventListener('DOMContentLoaded', attemptRedirect);
+
+        // Also try on window load as backup
+        window.addEventListener('load', () => {
+            setTimeout(attemptRedirect, 100);
+        });
+
+        // Immediate execution as well
+        if (document.readyState === 'loading') {
+            attemptRedirect();
+        }
+    </script>
+</body>
+</html>
