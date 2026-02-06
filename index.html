@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a1a">
-    <title>Continue to Link</title>
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Open Link</title>
     <style>
         * {
             margin: 0;
@@ -13,32 +13,22 @@
         }
 
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #1a1a1a;
-            --bg-card: #252525;
+            --bg-dark: #0a0a0a;
+            --bg-card: #151515;
+            --bg-card-hover: #1a1a1a;
             --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
+            --text-secondary: #a0a0a0;
             --accent: #00f2ea;
-            --accent-hover: #00d4cc;
-            --border: #333333;
-            --error: #ff6b6b;
-            --success: #51cf66;
-        }
-
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-primary: #ffffff;
-                --bg-secondary: #f5f5f5;
-                --bg-card: #ffffff;
-                --text-primary: #0a0a0a;
-                --text-secondary: #666666;
-                --border: #e0e0e0;
-            }
+            --accent-glow: rgba(0, 242, 234, 0.3);
+            --accent-dark: #00a8a3;
+            --border: #2a2a2a;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -46,27 +36,41 @@
             justify-content: center;
             padding: 20px;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 480px;
+            max-width: 500px;
             width: 100%;
-            text-align: center;
         }
 
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 20px;
             padding: 40px 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes slideUp {
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #00a8ff, var(--accent));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -74,135 +78,264 @@
             }
         }
 
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
         .logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
-            background: linear-gradient(135deg, var(--accent), #ff0050);
-            border-radius: 20px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            animation: pulse 2s ease-in-out infinite;
+            font-size: 36px;
+            box-shadow: 0 8px 24px var(--accent-glow);
+            animation: float 3s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             color: var(--text-primary);
+            text-align: center;
         }
 
         .subtitle {
             color: var(--text-secondary);
             font-size: 15px;
-            margin-bottom: 32px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
-        .helper-text {
-            color: var(--text-secondary);
+        .main-button {
+            display: block;
+            width: 100%;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            color: #000;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px var(--accent-glow);
+            text-decoration: none;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .main-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px var(--accent-glow);
+        }
+
+        .main-button:active {
+            transform: translateY(0px);
+        }
+
+        /* Instructions Section */
+        .instructions {
+            background: rgba(0, 242, 234, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            display: none;
+        }
+
+        .instructions.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .instructions-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .instructions-icon {
+            font-size: 28px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .instructions-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-card-hover);
+            border-radius: 12px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: #1f1f1f;
+            transform: translateX(4px);
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            min-width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), #00a8ff);
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .step-detail {
             font-size: 13px;
-            margin-top: 20px;
-            padding: 0 20px;
+            color: var(--text-secondary);
             line-height: 1.5;
         }
 
-        .direct-link {
-            display: block;
+        .step-icon {
+            font-size: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* Arrow indicator */
+        .arrow-up {
+            text-align: center;
+            font-size: 40px;
+            color: var(--accent);
+            animation: arrowBounce 1.5s ease-in-out infinite;
             margin: 16px 0;
-            padding: 12px;
-            background: rgba(0, 242, 234, 0.1);
-            border: 1px solid var(--accent);
-            border-radius: 8px;
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Direct Link */
+        .link-box {
+            background: rgba(0, 242, 234, 0.08);
+            border: 1px dashed var(--accent);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .link-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .direct-link {
             color: var(--accent);
             text-decoration: none;
             font-size: 14px;
             word-break: break-all;
+            font-weight: 500;
             transition: all 0.3s ease;
+            display: inline-block;
         }
 
         .direct-link:hover {
-            background: rgba(0, 242, 234, 0.2);
+            color: #00ffed;
+            text-decoration: underline;
         }
 
-        .button-primary {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent), #00a8ff);
-            color: #000;
-            text-decoration: none;
-            padding: 16px 32px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 12px 0;
-            box-shadow: 0 4px 20px rgba(0, 242, 234, 0.3);
-        }
-
-        .button-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 242, 234, 0.4);
-        }
-
-        .button-secondary {
-            display: inline-block;
-            background: transparent;
-            color: var(--text-primary);
-            text-decoration: none;
-            padding: 14px 32px;
-            border-radius: 12px;
-            font-weight: 500;
-            font-size: 14px;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin: 12px 0;
-        }
-
-        .button-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
+        /* Badge */
         .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            background: rgba(81, 207, 102, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success);
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            margin-top: 16px;
+            margin-top: 20px;
         }
 
+        /* Footer */
         .footer {
             margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
             color: var(--text-secondary);
             font-size: 12px;
+            line-height: 1.6;
         }
 
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 24px 0;
-        }
-
-        .hidden {
-            display: none;
+        .tiktok-badge {
+            display: inline-block;
+            background: rgba(255, 0, 80, 0.15);
+            color: #ff0050;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
         }
 
         @media (max-width: 480px) {
@@ -210,7 +343,10 @@
                 padding: 32px 24px;
             }
             h1 {
-                font-size: 22px;
+                font-size: 24px;
+            }
+            .step-text {
+                font-size: 15px;
             }
         }
     </style>
@@ -219,97 +355,122 @@
     <div class="container">
         <div class="card">
             <div class="logo">🔗</div>
-            <h1>Access Your Links</h1>
-            <p class="subtitle">Click below to open in your browser</p>
+            <h1>Open in Browser</h1>
+            <p class="subtitle">Click the button below to access your links</p>
 
-            <button class="button-primary" id="continueButton" onclick="attemptRedirect()">
-                Access CNMastair links
+            <button class="main-button" id="mainButton" onclick="handleClick()">
+                🚀 Open CNMastair Links
             </button>
 
-            <a href="https://beacons.ai/cnmastairs"
-               class="direct-link"
-               target="_blank"
-               rel="noopener noreferrer">
-                https://beacons.ai/cnmastairs
-            </a>
+            <div class="link-box">
+                <div class="link-label">Direct Link</div>
+                <a href="https://beacons.ai/cnmastairs"
+                   class="direct-link"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    https://beacons.ai/cnmastairs
+                </a>
+            </div>
 
-            <p class="helper-text">
-                💡 If the link doesn't open, tap the three dots (⋮) and select "Open in Browser"
-            </p>
+            <div class="instructions" id="instructions">
+                <div class="tiktok-badge">📱 TikTok Detected</div>
 
-            <div class="badge">✓ Secure Connection</div>
+                <div class="instructions-header">
+                    <span class="instructions-icon">👆</span>
+                    <span class="instructions-title">Follow These Steps</span>
+                </div>
 
-            <div class="divider"></div>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-text">Look for the three dots ⋮ or menu icon</div>
+                        <div class="step-detail">Usually in the top-right corner of your screen</div>
+                    </div>
+                    <span class="step-icon">👉</span>
+                </div>
+
+                <div class="arrow-up">⬆️</div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-text">Tap "Open in Browser" or "Open in Safari/Chrome"</div>
+                        <div class="step-detail">This opens the link in your default browser</div>
+                    </div>
+                    <span class="step-icon">🌐</span>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-text">The page will automatically redirect</div>
+                        <div class="step-detail">You'll be taken to your CNMastair links</div>
+                    </div>
+                    <span class="step-icon">✨</span>
+                </div>
+            </div>
+
+            <div class="badge">
+                <span>🔒</span>
+                <span>Secure Connection</span>
+            </div>
 
             <div class="footer">
-                If you're having trouble, please try opening this page<br>in your device's default browser.
+                Having trouble? Copy the direct link above<br>and paste it in your browser.
             </div>
         </div>
     </div>
 
     <script>
         const TARGET_URL = 'https://beacons.ai/cnmastairs';
-        let redirectAttempted = false;
+        let attempted = false;
 
-        // Detect TikTok in-app browser (2026 method)
-        function detectTikTok() {
+        // Detect TikTok browser
+        function isTikTok() {
             const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-            // TikTok identifiers in 2026
             return ua.indexOf('musical_ly') > -1 ||
                    ua.indexOf('trill') > -1 ||
                    ua.indexOf('JsSdk') > -1;
         }
 
-        // Modern redirect approach for 2026
-        function attemptRedirect() {
-            if (redirectAttempted) return;
-            redirectAttempted = true;
+        // Handle button click
+        function handleClick() {
+            if (attempted) return;
+            attempted = true;
 
-            const isTikTok = detectTikTok();
-
-            if (isTikTok) {
-                // TikTok browser detected - show instructions instead of forcing redirect
-                showTikTokInstructions();
-                return;
+            if (isTikTok()) {
+                // Show visual instructions
+                showInstructions();
+            } else {
+                // Direct redirect
+                window.location.href = TARGET_URL;
             }
-
-            // Not in TikTok - simple direct redirect works
-            window.location.href = TARGET_URL;
         }
 
-        // Show TikTok-specific instructions
-        function showTikTokInstructions() {
-            // Update button text to indicate we detected TikTok
-            const button = document.getElementById('continueButton');
-            button.textContent = '↗ Open Link (Copy if needed)';
-            button.onclick = function() {
-                // One gentle attempt - might work, might not
+        // Show TikTok instructions
+        function showInstructions() {
+            const instructionsEl = document.getElementById('instructions');
+            const buttonEl = document.getElementById('mainButton');
+
+            instructionsEl.classList.add('active');
+            buttonEl.textContent = '↗️ Try Opening Link';
+            buttonEl.onclick = function() {
                 window.location.href = TARGET_URL;
             };
 
-            // Update helper text with TikTok-specific guidance
-            const helperText = document.querySelector('.helper-text');
-            helperText.innerHTML = `
-                <strong>📱 You're in TikTok's browser</strong><br>
-                To open this link properly:<br>
-                1. Tap the three dots <strong>(⋮)</strong> at the top<br>
-                2. Select <strong>"Open in Browser"</strong><br>
-                3. The link will open in your default browser
-            `;
+            // Scroll to instructions
+            setTimeout(() => {
+                instructionsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         }
 
-        // Auto-redirect on page load if NOT in TikTok
+        // Auto-redirect if NOT in TikTok
         window.addEventListener('DOMContentLoaded', function() {
-            const isTikTok = detectTikTok();
-
-            if (!isTikTok) {
-                // In regular browser (Safari/Chrome) - redirect immediately
+            if (!isTikTok()) {
                 setTimeout(function() {
                     window.location.href = TARGET_URL;
-                }, 500); // Small delay so user sees the page briefly
+                }, 500);
             }
-            // If in TikTok, do nothing - wait for button click
         });
     </script>
 </body>
