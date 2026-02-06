@@ -117,6 +117,24 @@
             line-height: 1.5;
         }
 
+        .direct-link {
+            display: block;
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(0, 242, 234, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+            word-break: break-all;
+            transition: all 0.3s ease;
+        }
+
+        .direct-link:hover {
+            background: rgba(0, 242, 234, 0.2);
+        }
+
         .button-primary {
             display: inline-block;
             background: linear-gradient(135deg, var(--accent), #00a8ff);
@@ -201,12 +219,19 @@
     <div class="container">
         <div class="card">
             <div class="logo">🔗</div>
-            <h1>Ready to Continue?</h1>
-            <p class="subtitle">Tap the button below to open in your browser</p>
+            <h1>Access Your Links</h1>
+            <p class="subtitle">Click below to open in your browser</p>
 
             <button class="button-primary" id="continueButton" onclick="attemptRedirect()">
                 Access CNMastair links
             </button>
+
+            <a href="https://beacons.ai/cnmastairs"
+               class="direct-link"
+               target="_blank"
+               rel="noopener noreferrer">
+                https://beacons.ai/cnmastairs
+            </a>
 
             <p class="helper-text">
                 💡 If the link doesn't open, tap the three dots (⋮) and select "Open in Browser"
@@ -226,101 +251,66 @@
         const TARGET_URL = 'https://beacons.ai/cnmastairs';
         let redirectAttempted = false;
 
-        // iOS specific bypass using Shortcuts error callback
-        function iOSBypass(url) {
-            const randomUUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
+        // Detect TikTok in-app browser (2026 method)
+        function detectTikTok() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
 
-            const shortcutsUrl = `shortcuts://x-callback-url/run-shortcut?name=${randomUUID}&x-error=${encodeURIComponent(url)}`;
-            window.location.href = shortcutsUrl;
+            // TikTok identifiers in 2026
+            return ua.indexOf('musical_ly') > -1 ||
+                   ua.indexOf('trill') > -1 ||
+                   ua.indexOf('JsSdk') > -1;
         }
 
-        // Android specific bypass using Intent
-        function androidBypass(url) {
-            const intentUrl = `intent:${url.replace(/^https?:\/\//, '')}#Intent;end`;
-            window.location.href = intentUrl;
-
-            // Fallback: Try Chrome-specific intent
-            setTimeout(() => {
-                const chromeIntent = `intent:${url.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`;
-                window.location.href = chromeIntent;
-            }, 500);
-        }
-
-        // Blob download trick to trigger external browser
-        function blobBypass(url) {
-            try {
-                const blob = new Blob([''], { type: 'text/html' });
-                const blobUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = '';
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(blobUrl);
-            } catch (e) {
-                console.log('Blob bypass failed:', e);
-            }
-        }
-
-        // Universal app scheme bypass
-        function universalAppSchemeBypass(url) {
-            // Try various browser-specific URL schemes
-            const schemes = [
-                `googlechrome://${url.replace(/^https?:\/\//, '')}`,
-                `firefox://open-url?url=${encodeURIComponent(url)}`,
-                `opera-http://${url.replace(/^https?:\/\//, '')}`,
-                `x-web-search://?${encodeURIComponent(url)}`
-            ];
-
-            schemes.forEach((scheme, index) => {
-                setTimeout(() => {
-                    window.location.href = scheme;
-                }, index * 300);
-            });
-        }
-
-        // Main redirect function with multiple strategies
+        // Modern redirect approach for 2026
         function attemptRedirect() {
             if (redirectAttempted) return;
             redirectAttempted = true;
 
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isAndroid = /Android/.test(navigator.userAgent);
+            const isTikTok = detectTikTok();
 
-            // Strategy 1: iOS Shortcuts bypass
-            if (isIOS) {
-                setTimeout(() => iOSBypass(TARGET_URL), 100);
+            if (isTikTok) {
+                // TikTok browser detected - show instructions instead of forcing redirect
+                showTikTokInstructions();
+                return;
             }
 
-            // Strategy 2: Android Intent bypass
-            if (isAndroid) {
-                setTimeout(() => androidBypass(TARGET_URL), 100);
-            }
-
-            // Strategy 3: Blob/download trigger
-            setTimeout(() => blobBypass(TARGET_URL), 300);
-
-            // Strategy 4: Universal app scheme attempts
-            setTimeout(() => universalAppSchemeBypass(TARGET_URL), 600);
-
-            // Strategy 5: Direct window.open
-            setTimeout(() => {
-                window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
-            }, 900);
-
-            // Strategy 6: Direct location replace fallback
-            setTimeout(() => {
-                window.location.replace(TARGET_URL);
-            }, 1200);
+            // Not in TikTok - simple direct redirect works
+            window.location.href = TARGET_URL;
         }
 
-        // Redirect only triggered by button click - no automatic execution
+        // Show TikTok-specific instructions
+        function showTikTokInstructions() {
+            // Update button text to indicate we detected TikTok
+            const button = document.getElementById('continueButton');
+            button.textContent = '↗ Open Link (Copy if needed)';
+            button.onclick = function() {
+                // One gentle attempt - might work, might not
+                window.location.href = TARGET_URL;
+            };
+
+            // Update helper text with TikTok-specific guidance
+            const helperText = document.querySelector('.helper-text');
+            helperText.innerHTML = `
+                <strong>📱 You're in TikTok's browser</strong><br>
+                To open this link properly:<br>
+                1. Tap the three dots <strong>(⋮)</strong> at the top<br>
+                2. Select <strong>"Open in Browser"</strong><br>
+                3. The link will open in your default browser
+            `;
+        }
+
+        // Auto-redirect on page load if NOT in TikTok
+        window.addEventListener('DOMContentLoaded', function() {
+            const isTikTok = detectTikTok();
+
+            if (!isTikTok) {
+                // In regular browser (Safari/Chrome) - redirect immediately
+                setTimeout(function() {
+                    window.location.href = TARGET_URL;
+                }, 500); // Small delay so user sees the page briefly
+            }
+            // If in TikTok, do nothing - wait for button click
+        });
     </script>
 </body>
 </html>
