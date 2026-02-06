@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1a1a1a">
-    <title>Opening Link...</title>
+    <title>Continue to Link</title>
     <style>
         * {
             margin: 0;
@@ -109,63 +109,12 @@
             margin-bottom: 32px;
         }
 
-        .status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px;
-            background: rgba(0, 242, 234, 0.1);
-            border: 1px solid var(--accent);
-            border-radius: 12px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            color: var(--accent);
-        }
-
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0, 242, 234, 0.2);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .instructions {
-            background: rgba(255, 107, 107, 0.1);
-            border: 1px solid var(--error);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 24px 0;
-            text-align: left;
-        }
-
-        .instructions-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            font-size: 16px;
-        }
-
-        .instructions ol {
-            margin-left: 20px;
+        .helper-text {
             color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        .instructions li {
-            margin: 8px 0;
-        }
-
-        .instructions strong {
-            color: var(--text-primary);
+            font-size: 13px;
+            margin-top: 20px;
+            padding: 0 20px;
+            line-height: 1.5;
         }
 
         .button-primary {
@@ -252,37 +201,16 @@
     <div class="container">
         <div class="card">
             <div class="logo">🔗</div>
-            <h1>Opening Your Link</h1>
-            <p class="subtitle">Redirecting you to your destination...</p>
+            <h1>Ready to Continue?</h1>
+            <p class="subtitle">Tap the button below to open in your browser</p>
 
-            <div class="status" id="status">
-                <div class="spinner"></div>
-                <span id="statusText">Attempting automatic redirect...</span>
-            </div>
-
-            <div class="instructions hidden" id="instructions">
-                <div class="instructions-title">
-                    <span>⚠️</span>
-                    <span>Manual Browser Opening Required</span>
-                </div>
-                <ol>
-                    <li>Tap the <strong>three dots (...)</strong> in the top-right corner</li>
-                    <li>Select <strong>"Open in Browser"</strong> or <strong>"Open in Safari/Chrome"</strong></li>
-                    <li>The link will open in your default browser</li>
-                </ol>
-            </div>
-
-            <a href="https://beacons.ai/cnmastairs"
-               class="button-primary"
-               id="manualLink"
-               target="_blank"
-               rel="noopener noreferrer">
-                Open Link Manually
-            </a>
-
-            <button class="button-secondary" id="retryButton" onclick="retryRedirect()">
-                Try Automatic Redirect Again
+            <button class="button-primary" id="continueButton" onclick="attemptRedirect()">
+                Access CNMastair links
             </button>
+
+            <p class="helper-text">
+                💡 If the link doesn't open, tap the three dots (⋮) and select "Open in Browser"
+            </p>
 
             <div class="badge">✓ Secure Connection</div>
 
@@ -297,31 +225,6 @@
     <script>
         const TARGET_URL = 'https://beacons.ai/cnmastairs';
         let redirectAttempted = false;
-
-        // Detect if we're in an in-app browser
-        function detectInAppBrowser() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-
-            // TikTok in-app browser detection
-            const isTikTok = /TikTok/i.test(ua) || /musical_ly/i.test(ua);
-
-            // Other in-app browsers
-            const isInstagram = /Instagram/i.test(ua);
-            const isFacebook = /FB|FBAV|FBAN/i.test(ua);
-            const isTwitter = /Twitter/i.test(ua);
-            const isLinkedIn = /LinkedInApp/i.test(ua);
-            const isMessenger = /Messenger/i.test(ua);
-
-            return {
-                isInApp: isTikTok || isInstagram || isFacebook || isTwitter || isLinkedIn || isMessenger,
-                platform: isTikTok ? 'TikTok' :
-                         isInstagram ? 'Instagram' :
-                         isFacebook ? 'Facebook' :
-                         isTwitter ? 'Twitter' :
-                         isLinkedIn ? 'LinkedIn' :
-                         isMessenger ? 'Messenger' : 'Unknown'
-            };
-        }
 
         // iOS specific bypass using Shortcuts error callback
         function iOSBypass(url) {
@@ -382,32 +285,15 @@
             });
         }
 
-        // Meta refresh fallback
-        function metaRefreshBypass(url) {
-            const meta = document.createElement('meta');
-            meta.httpEquiv = 'refresh';
-            meta.content = `0;url=${url}`;
-            document.head.appendChild(meta);
-        }
-
         // Main redirect function with multiple strategies
         function attemptRedirect() {
             if (redirectAttempted) return;
             redirectAttempted = true;
 
-            const detection = detectInAppBrowser();
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
             const isAndroid = /Android/.test(navigator.userAgent);
 
-            console.log('Device detection:', { isIOS, isAndroid, ...detection });
-
-            // Update status
-            document.getElementById('statusText').textContent =
-                detection.isInApp ?
-                `${detection.platform} detected - attempting bypass...` :
-                'Redirecting...';
-
-            // Strategy 1: iOS Shortcuts bypass (most effective for iOS in 2026)
+            // Strategy 1: iOS Shortcuts bypass
             if (isIOS) {
                 setTimeout(() => iOSBypass(TARGET_URL), 100);
             }
@@ -423,60 +309,18 @@
             // Strategy 4: Universal app scheme attempts
             setTimeout(() => universalAppSchemeBypass(TARGET_URL), 600);
 
-            // Strategy 5: Direct window.open with specific features
+            // Strategy 5: Direct window.open
             setTimeout(() => {
-                const newWindow = window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
-                if (!newWindow) {
-                    console.log('Popup blocked');
-                }
+                window.open(TARGET_URL, '_blank', 'noopener,noreferrer');
             }, 900);
 
-            // Strategy 6: Direct location replace
+            // Strategy 6: Direct location replace fallback
             setTimeout(() => {
                 window.location.replace(TARGET_URL);
             }, 1200);
-
-            // Strategy 7: Meta refresh fallback
-            setTimeout(() => {
-                metaRefreshBypass(TARGET_URL);
-            }, 1500);
-
-            // Strategy 8: Direct assignment fallback
-            setTimeout(() => {
-                window.location.href = TARGET_URL;
-            }, 1800);
-
-            // After 3 seconds, show manual instructions if still here
-            setTimeout(() => {
-                if (detection.isInApp) {
-                    document.getElementById('status').style.display = 'none';
-                    document.getElementById('instructions').classList.remove('hidden');
-                    document.getElementById('statusText').textContent = 'Please open manually';
-                }
-            }, 3000);
         }
 
-        // Retry function
-        function retryRedirect() {
-            redirectAttempted = false;
-            document.getElementById('status').style.display = 'flex';
-            document.getElementById('instructions').classList.add('hidden');
-            document.getElementById('statusText').textContent = 'Retrying automatic redirect...';
-            attemptRedirect();
-        }
-
-        // Start redirect attempts immediately on page load
-        window.addEventListener('DOMContentLoaded', attemptRedirect);
-
-        // Also try on window load as backup
-        window.addEventListener('load', () => {
-            setTimeout(attemptRedirect, 100);
-        });
-
-        // Immediate execution as well
-        if (document.readyState === 'loading') {
-            attemptRedirect();
-        }
+        // Redirect only triggered by button click - no automatic execution
     </script>
 </body>
 </html>
