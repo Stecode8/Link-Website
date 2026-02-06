@@ -266,6 +266,56 @@
             50% { transform: translateY(-10px); }
         }
 
+        /* Menu Pointer to Top-Right */
+        .menu-pointer {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 15px;
+            z-index: 1000;
+        }
+
+        .menu-pointer.active {
+            display: block;
+            animation: pointerFadeIn 0.5s ease-out;
+        }
+
+        .pointer-text {
+            background: var(--accent);
+            color: #000;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 8px 24px var(--accent-glow);
+            animation: pointerBounce 1.5s ease-in-out infinite;
+            white-space: nowrap;
+        }
+
+        .pointer-text::before {
+            content: '↗';
+            position: absolute;
+            top: -30px;
+            right: 10px;
+            font-size: 40px;
+            animation: arrowPointUp 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pointerBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+
+        @keyframes pointerFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes arrowPointUp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
         /* Direct Link */
         .link-box {
             background: rgba(0, 242, 234, 0.08);
@@ -421,6 +471,11 @@
         </div>
     </div>
 
+    <!-- Menu Pointer -->
+    <div class="menu-pointer" id="menuPointer">
+        <div class="pointer-text">👆 Tap the ⋮ menu</div>
+    </div>
+
     <script>
         const TARGET_URL = 'https://beacons.ai/cnmastairs';
         let attempted = false;
@@ -451,12 +506,18 @@
         function showInstructions() {
             const instructionsEl = document.getElementById('instructions');
             const buttonEl = document.getElementById('mainButton');
+            const pointerEl = document.getElementById('menuPointer');
 
             instructionsEl.classList.add('active');
             buttonEl.textContent = '↗️ Try Opening Link';
             buttonEl.onclick = function() {
                 window.location.href = TARGET_URL;
             };
+
+            // Show menu pointer
+            if (pointerEl) {
+                pointerEl.classList.add('active');
+            }
 
             // Scroll to instructions
             setTimeout(() => {
